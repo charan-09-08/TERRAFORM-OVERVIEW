@@ -1,0 +1,126 @@
+# RESOURCE 
+
+resource "aws_vpc" "mydummyvpc" {
+  cidr_block = var.cidrvpc
+  tags = {
+    Name = var.namevpc
+  }
+}
+resource "aws_subnet" "firstsub" {
+  vpc_id            = aws_vpc.mydummyvpc.id
+  availability_zone = var.sub1az
+  cidr_block        = var.sub1cidr
+  tags = {
+    Name = var.sub1name
+  }
+}
+resource "aws_subnet" "secondsub" {
+  vpc_id            = aws_vpc.mydummyvpc.id
+  availability_zone = var.sub2az
+  cidr_block        = var.sub2cidr
+  tags = {
+    Name = var.sub2name
+  }
+}
+resource "aws_subnet" "thirdsub" {
+  vpc_id            = aws_vpc.mydummyvpc.id
+  availability_zone = var.sub3az
+  cidr_block        = var.sub3cidr
+  tags = {
+    Name = var.sub3name
+  }
+}
+
+# VARIABLES
+
+variable "cidrvpc" {
+  type    = string
+  default = "10.0.0.0/16"
+}
+variable "namevpc" {
+  type    = string
+  default = "myownvpc"
+}
+variable "sub1az" {
+  type    = string
+  default = "ap-south-1a"
+}
+variable "sub1cidr" {
+  type    = string
+  default = "10.0.1.0/24"
+}
+variable "sub1name" {
+  type    = string
+  default = "sub1"
+}
+variable "sub2az" {
+  type    = string
+  default = "ap-south-1b"
+
+}
+variable "sub2cidr" {
+  type    = string
+  default = "10.0.2.0/24"
+}
+variable "sub2name" {
+  type    = string
+  default = "sub2"
+}
+variable "sub3az" {
+  type    = string
+  default = "ap-south-1c"
+}
+variable "sub3cidr" {
+  type    = string
+  default = "10.0.3.0/24"
+}
+variable "sub3name" {
+  type    = string
+  default = "sub3"
+
+}
+
+# 2ND WAY
+
+resource "aws_vpc" "mydummyvpc" {
+  cidr_block = var.vpccidr
+  tags = {
+    Name = var.vpcname
+  }
+}
+
+resource "aws_subnet" "subnets"  {
+    count = 4
+    vpc_id = aws_vpc.mydummyvpc.id
+    availability_zone = var.subnetsaz[count.index]
+        cidr_block = var.subnetscidr[count.index]
+    tags = {
+      Name = var.subnnetsname[count.index]
+    }
+}
+
+# 2ND WAY
+
+variable "vpccidr" {
+    type = string
+    default = "10.0.0.0/16"
+}
+variable "vpcname" {
+    type = string
+    default = "vpc"
+}
+
+variable "subnetsaz" {
+    type = list(string)
+    default = [ "ap-south-1a" , "ap-south-1b" , "ap-south-1c", "ap-south-1b"] 
+}
+
+variable "subnetscidr" {
+  type = list(string)
+  default = [ "10.0.0.0/24" ,"10.0.1.0/24" , "10.0.2.0/24" ,"10.0.3.0/24" ]
+}
+
+variable "subnnetsname" {
+    type = list(string)
+    default = [ "sub1" , "sub2" , "sub3" ,"sub4" ] 
+}
